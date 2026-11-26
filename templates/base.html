@@ -8,8 +8,8 @@
     {% endif %}
   </head>
   <body>
-    <div> Мой блог: <a href="/index"> Домой </a> 
-                    <a href="/login"> Логин </a>
+    <div> Мой блог: <a href="{{ url_for('index') }}"> Домой </a>
+                    <a href="{{ url_for('login') }}"> Логин </a>
     </div>
     <hr>
     {% with messages = get_flashed_messages() %}

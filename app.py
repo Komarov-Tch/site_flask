@@ -1,21 +1,27 @@
 from flask import Flask
-from flask import render_template, flash, redirect
+from flask import render_template, flash, redirect, url_for
 from flask import request
+from config import Config
 from forms import Login
 
+from flask_sqlalchemy import SQLAlchemy
+from flask_migrate import Migrate
+
 app = Flask(__name__)
-app.config['SECRET_KEY'] = 'you-will-never-guess'
+app.config.from_object(Config)
+db = SQLAlchemy(app)
+migrate = Migrate(app, db)
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     form = Login()
     if form.validate_on_submit():
         flash('Получен логин для пользователя {}, запомнить {}'.format(form.username.data, form.remember_me.data))
-        redirect('/index')
+        return redirect(url_for('index'))
     return render_template('login.html', title='Вход', form=form)
 
 
-@app.route('/')
+@app.route('/hello')
 def hello():
     return 'Привет, мир!'
 
@@ -29,9 +35,10 @@ def user_profile(username):
 
 @app.route('/submit', methods=['POST'])
 def submit():
-    name=request.form(['name'])
+    name = request.form(['name'])
     return f'Hello, {name}'
 
+@app.route('/')
 @app.route('/index')
 def index():
     user = {'username': 'Egor'}
